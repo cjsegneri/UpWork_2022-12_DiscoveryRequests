@@ -1,0 +1,17 @@
+
+regex extraction strategy:
+number-dot-whitespace-any length wildcard-dot-(multiple spaces, tab, or newline)
+[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?:[ ]{2,}|\t|\n)
+
+Issues to Troubleshoot:
+- Chartwell Law.pdf could not be parsed in.
+- Kirwanm Spellacy, Danner.pdf
+- Reynolds Parrino Shadwick P.A..pdf
+- Rigdon Alexander & Ridon LLP.pdf
+
+Look into these warnings:
+Multiple definitions in dictionary at byte 0x80 for key /Subtype
+Multiple definitions in dictionary at byte 0x7d for key /Subtype
+Multiple definitions in dictionary at byte 0x7d for key /Subtype
+Multiple definitions in dictionary at byte 0x80 for key /Subtype
+Multiple definitions in dictionary at byte 0x80 for key /Subtype

@@ -53,9 +53,14 @@ def main():
         discovery_requests_list.append(regex_matches)
 
     # manually verify the requests list for each document
-    
+    j = 0
+    print('Document Name: ' + dir_list[j] + '\n\n\n')
+    for i in range(0, len(discovery_requests_list[j])):
+        print('[[' + discovery_requests_list[j][i] + ']]\n')
 
-    # clean the requests
+    # clean the requests text
+        # remove whitespace at the beginning and end of each request
+        # replace all whitespace (spaces, tabs, newlines) with a single space
 
     # identify and remove stopwords
 

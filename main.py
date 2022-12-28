@@ -1,4 +1,5 @@
 
+import os
 from PyPDF2 import PdfFileReader
 
 def get_pdf_text(path):
@@ -20,11 +21,14 @@ def main():
     #pdf_text = get_pdf_text('DiscoveryDocuments/BUCHANAN & BUCHANAN, P.A..pdf')
     pdf_text = get_pdf_text('DiscoveryDocuments/ANDREW J. GORMAN & ASSOCIATES.pdf')
 
-    print(pdf_text)
-
     # loop through given directory and collect all the file names
+    path = 'DiscoveryDocuments/'
+    dir_list = os.listdir(path)
+    print(dir_list)
 
     # get the text for every file name
+    for i in range(0, len(dir_list)):
+        print(dir_list[i])
 
     # for every document, extract the list of discovery requests
 

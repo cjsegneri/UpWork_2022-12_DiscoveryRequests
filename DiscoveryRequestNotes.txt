@@ -15,3 +15,20 @@ Multiple definitions in dictionary at byte 0x7d for key /Subtype
 Multiple definitions in dictionary at byte 0x7d for key /Subtype
 Multiple definitions in dictionary at byte 0x80 for key /Subtype
 Multiple definitions in dictionary at byte 0x80 for key /Subtype
+
+
+
+12/28/2022
+- fix issue preventing 4 pdfs from being read in
+	- Chartwell Law.pdf
+	- Kirwanm Spellacy, Danner.pdf
+	- Reynolds Parrino Shadwick P.A..pdf
+	- Rigdon Alexander & Ridon LLP.pdf
+- manually verify the requests list for each document
+- rerun and send out summary statistics
+- clean the requests text
+- better organize code into single-activity functions
+- add comments where necessary
+- clean up code according to pylint
+
+- spend extra time converting 4 pdfs to images and using ML to read in the text?

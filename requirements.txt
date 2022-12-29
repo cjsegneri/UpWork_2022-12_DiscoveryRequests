@@ -1,9 +1,15 @@
 astroid==2.12.13
+cffi==1.15.1
+charset-normalizer==3.0.1
+cryptography==38.0.4
 dill==0.3.6
 isort==5.11.3
 lazy-object-proxy==1.8.0
 mccabe==0.7.0
+pdfminer.six==20221105
 platformdirs==2.6.0
+pycparser==2.21
+pycryptodome==3.16.0
 pylint==2.15.9
 PyPDF2==2.12.1
 tomli==2.0.1

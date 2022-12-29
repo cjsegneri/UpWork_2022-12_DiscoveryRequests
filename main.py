@@ -8,13 +8,11 @@ def get_pdf_text(path):
     pdf_reader = PdfFileReader(path, strict=False)
 
     pdf_list = []
-
     for i in range(0,pdf_reader.numPages):
         page = pdf_reader.getPage(i).extractText()
         # if it's the first page, remove the footer
         if i == 0:
             page = page.split('Filing #')[0]
-
         pdf_list.append(page+'  ')
     
     return ' '.join(pdf_list)
@@ -46,39 +44,49 @@ def main():
     discovery_text_list = [x for i,x in enumerate(discovery_text_list) if i not in broken_pdf_indexes]
 
     # manually verify the text for each document was read in correctly
-    # j = 52
+    # j = 29
     # print('Document Name: ' + dir_list[j] + '\n\n\n')
     # print(discovery_text_list[j])
+    # return 0
 
     # for every document, extract the list of discovery requests
     discovery_requests_list = []
     for i in range(0, len(discovery_text_list)):
-        regex = r'[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?:[ ]{2,}|\t|\n)'
+        regex = r'[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])'
         regex_matches = re.findall(regex, discovery_text_list[i])
+        # if there are no matches, then use a slightly different regex
+        # that accounts for no space between the number and the request
+        if len(regex_matches) == 0:
+            regex = r'[0-9][0-9]?\.[ \t]{0,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])'
+            regex_matches = re.findall(regex, discovery_text_list[i])
         discovery_requests_list.append(regex_matches)
 
     # manually verify the requests list for each document
-    # j = 1
-    # print('Document Name: ' + dir_list[j] + '\n\n\n')
+    # j = 52
+    # #print(discovery_requests_list[j])
     # for i in range(0, len(discovery_requests_list[j])):
-    #     print('[[' + discovery_requests_list[j][i] + ']]\n')
+    #     print('[[[' + discovery_requests_list[j][i] + ']]]\n--------------------\n')
+    # print('Document Name: ' + dir_list[j])
 
     # get summary statistics
-    # sum_list = []
-    # for i in range(0, len(discovery_requests_list)):
-    #     sum_list.append(len(discovery_requests_list[i]))
-    
-    # print(len(sum_list))
-    # print(sum_list)
+    sum_list = []
+    for i in range(0, len(discovery_requests_list)):
+        sum_list.append(len(discovery_requests_list[i]))
 
-    # print(mean(sum_list))
-    # print(sum(sum_list))
+    print('\n\nTotal number of documents parsed in: '+str(len(sum_list)))
+    print('Total number of requests parsed out of the documents: '+str(sum(sum_list)))
+    print('Average number of requests per document: '+str(mean(sum_list)))
+    print('\nList containing the total number of requests per document:')
+    print(sum_list)
+
+    # merge requests into a single list
 
     # clean the requests text
         # remove whitespace at the beginning and end of each request
         # replace all whitespace (spaces, tabs, newlines) with a single space
+        # remove request number at the beginning
         # lowercase all characters
-        # 
+        # remove sensitivity: public
 
     # identify and remove stopwords
 

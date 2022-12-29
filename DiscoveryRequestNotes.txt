@@ -1,7 +1,8 @@
 
 regex extraction strategy:
 number-dot-whitespace-any length wildcard-dot-(multiple spaces, tab, or newline)
-[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?:[ ]{2,}|\t|\n)
+[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?:[ ]{2,}|\t|\n| \t| \n)
+[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])
 
 Issues to Troubleshoot:
 - Chartwell Law.pdf could not be parsed in.
@@ -17,8 +18,7 @@ Multiple definitions in dictionary at byte 0x80 for key /Subtype
 Multiple definitions in dictionary at byte 0x80 for key /Subtype
 
 
-
-12/28/2022
+12/29/2022
 - fix issue preventing 4 pdfs from being read in
 	- Chartwell Law.pdf
 	- Kirwanm Spellacy, Danner.pdf
@@ -26,9 +26,10 @@ Multiple definitions in dictionary at byte 0x80 for key /Subtype
 	- Rigdon Alexander & Ridon LLP.pdf
 - manually verify the requests list for each document
 - rerun and send out summary statistics
+
+
+12/30/2022
 - clean the requests text
 - better organize code into single-activity functions
 - add comments where necessary
 - clean up code according to pylint
-
-- spend extra time converting 4 pdfs to images and using ML to read in the text?

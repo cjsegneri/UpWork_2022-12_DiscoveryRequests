@@ -1,6 +1,7 @@
 
 import os
 import re
+import csv
 from statistics import mean
 from PyPDF2 import PdfFileReader
 
@@ -69,26 +70,75 @@ def main():
     # print('Document Name: ' + dir_list[j])
 
     # get summary statistics
-    sum_list = []
-    for i in range(0, len(discovery_requests_list)):
-        sum_list.append(len(discovery_requests_list[i]))
+    # sum_list = []
+    # for i in range(0, len(discovery_requests_list)):
+    #     sum_list.append(len(discovery_requests_list[i]))
 
-    print('\n\nTotal number of documents parsed in: '+str(len(sum_list)))
-    print('Total number of requests parsed out of the documents: '+str(sum(sum_list)))
-    print('Average number of requests per document: '+str(mean(sum_list)))
-    print('\nList containing the total number of requests per document:')
-    print(sum_list)
+    # print('\n\nTotal number of documents parsed in: '+str(len(sum_list)))
+    # print('Total number of requests parsed out of the documents: '+str(sum(sum_list)))
+    # print('Average number of requests per document: '+str(mean(sum_list)))
+    # print('\nList containing the total number of requests per document:')
+    # print(sum_list)
 
     # merge requests into a single list
+    requests = []
+    for i in range(0,len(discovery_requests_list)):
+        for j in range(0,len(discovery_requests_list[i])):
+            requests.append(discovery_requests_list[i][j])
+
+    # temporarily filter for the first 20 requests
+    #requests = requests[:20]
 
     # clean the requests text
-        # remove whitespace at the beginning and end of each request
-        # replace all whitespace (spaces, tabs, newlines) with a single space
-        # remove request number at the beginning
+    requests_clean = []
+    for i in range(0,len(requests)):
+        r = requests[i]
         # lowercase all characters
-        # remove sensitivity: public
+        r = r.lower()
+        # remove whitespace at the beginning and end of each request
+        r = r.strip()
+        # replace all whitespace (spaces, tabs, newlines) with a single space
+        r = ' '.join(r.split())
+        # remove request number at the beginning of the string
+        r = re.sub(r'^[0-9][0-9]?\.[ ]?', '', r)
+        # remove all punctuation
+        r = re.sub(r'[!\"#\＄%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~]', '', r)
+        # append the clean request
+        requests_clean.append(r)
+    #print(requests_clean)
 
-    # identify and remove stopwords
+    # create a list of every word in the requests
+    words = []
+    for i in range(0,len(requests_clean)):
+        r = requests_clean[i].split()
+        for j in range(0,len(r)):
+            words.append(r[j])
+    #print(words)
+
+    # find the relevance count for each unique word
+    word_counts = dict()
+    for w in words:
+        word_counts[w] = word_counts.get(w,0) + 1
+    #print(word_counts)
+
+    # sort the word counts by count to get the most common words
+    word_counts_sorted = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)
+
+    # identify the most common words
+    # for i in range(0,150):
+    #     print(word_counts_sorted[i])
+
+    # write stopwords to a csv file
+    with open('stop_words.csv', 'w') as f:
+        writer = csv.writer(f, delimiter=',', lineterminator='\n')
+        for i in range(0,200):
+            row = [word_counts_sorted[i][0], word_counts_sorted[i][1]]
+            writer.writerow(row)
+
+    # create stop word list
+    #stop_words = ['the',]
+    # remove stopwords
+
 
     return 0
 

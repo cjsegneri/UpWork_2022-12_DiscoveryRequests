@@ -33,6 +33,10 @@ Multiple definitions in dictionary at byte 0x80 for key /Subtype
 12/30/2022
 - merge requests into a single list
 - clean the requests text
-- better organize code into single-activity functions
+
+
+12/31/2022
+- identify and remove stopwords
+[' the ',' of ',' a ',' to ',' in ',' or ',' as ',' for ',' is ',' have ',' been ',' and ',' which ',' you ',' that ',' this ',' an ',' at ',' by ',' from ',' your ',' was ',' not ',' has ',' andor ',' had ',' no ',' were ',' any ',' are ',' all ',' on ',' he ',' with ',' she ',' did ']
 - add comments where necessary
 - clean up code according to pylint

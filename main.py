@@ -87,7 +87,7 @@ def main():
             requests.append(discovery_requests_list[i][j])
 
     # temporarily filter for the first 20 requests
-    #requests = requests[:20]
+    requests = requests[:20]
 
     # clean the requests text
     requests_clean = []
@@ -108,37 +108,52 @@ def main():
     #print(requests_clean)
 
     # create a list of every word in the requests
-    words = []
-    for i in range(0,len(requests_clean)):
-        r = requests_clean[i].split()
-        for j in range(0,len(r)):
-            words.append(r[j])
+    # words = []
+    # for i in range(0,len(requests_clean)):
+    #     r = requests_clean[i].split()
+    #     for j in range(0,len(r)):
+    #         words.append(r[j])
     #print(words)
 
     # find the relevance count for each unique word
-    word_counts = dict()
-    for w in words:
-        word_counts[w] = word_counts.get(w,0) + 1
+    # word_counts = dict()
+    # for w in words:
+    #     word_counts[w] = word_counts.get(w,0) + 1
     #print(word_counts)
 
     # sort the word counts by count to get the most common words
-    word_counts_sorted = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)
+    #word_counts_sorted = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)
 
     # identify the most common words
     # for i in range(0,150):
     #     print(word_counts_sorted[i])
 
-    # write stopwords to a csv file
-    with open('stop_words.csv', 'w') as f:
-        writer = csv.writer(f, delimiter=',', lineterminator='\n')
-        for i in range(0,200):
-            row = [word_counts_sorted[i][0], word_counts_sorted[i][1]]
-            writer.writerow(row)
+    # write stopwords to a csv
+    # with open('stop_words.csv', 'w') as f:
+    #     writer = csv.writer(f, delimiter=',', lineterminator='\n')
+    #     for i in range(0,200):
+    #         row = [word_counts_sorted[i][0], word_counts_sorted[i][1]]
+    #         writer.writerow(row)
 
     # create stop word list
-    #stop_words = ['the',]
-    # remove stopwords
+    stop_words = [' the ',' of ',' a ',' to ',' in ',' or ',' as ',' for ',' is ',' have ',
+    ' been ',' and ',' which ',' you ',' that ',' this ',' an ',' at ',' by ',' from ',
+    ' your ',' was ',' not ',' has ',' andor ',' had ',' no ',' were ',' any ',' are ',
+    ' all ',' on ',' he ',' with ',' she ',' did ']
 
+    # remove stopwords
+    requests_clean_no_stop = []
+    for i in range(0,len(requests_clean)):
+        request_no_stop = requests_clean[i]
+        for j in range(0,len(stop_words)):
+            request_no_stop = request_no_stop.replace(stop_words[j], ' ')
+        # replace double spaces with a single space
+        request_no_stop = ' '.join(request_no_stop.split())
+        requests_clean_no_stop.append(request_no_stop)
+
+    for i in range(0,len(requests_clean)):
+        print(requests_clean[i])
+        print(requests_clean_no_stop[i]+'\n\n')
 
     return 0
 

@@ -1,13 +1,13 @@
 
 import os
 import re
-import csv
 from statistics import mean
 from PyPDF2 import PdfFileReader
 
+
 def get_pdf_text(path):
     pdf_reader = PdfFileReader(path, strict=False)
-
+    # read in the pdf page by page
     pdf_list = []
     for i in range(0,pdf_reader.numPages):
         page = pdf_reader.getPage(i).extractText()
@@ -15,32 +15,29 @@ def get_pdf_text(path):
         if i == 0:
             page = page.split('Filing #')[0]
         pdf_list.append(page+'  ')
-    
+    # join all the pdf pages into a single string
     return ' '.join(pdf_list)
 
 def main():
-    #pdf_text = get_pdf_text('DiscoveryDocuments/Reynolds Parrino Shadwick P.A..pdf')
-    #print(pdf_text)
-
     # loop through given directory and collect all the file names
     path = 'DiscoveryDocuments/'
     dir_list = os.listdir(path)
     #print(len(dir_list)) # 57 documents in total
 
-    # get the raw text for discovery document
+    # get the raw text for all the discovery documents
     discovery_text_list = []
     for i in range(0, len(dir_list)):
         pdf_path = path + dir_list[i]
         discovery_text = get_pdf_text(pdf_path)
         discovery_text_list.append(discovery_text)
     
-    # find the indexes for the pdfs that cannot be read in
+    # find the indexes for the pdfs that text could not be extracted from
     broken_pdf_indexes = []
     for i in range(0, len(discovery_text_list)):
         if 'the' not in discovery_text_list[i]:
             broken_pdf_indexes.append(i)
     
-    # remove pdfs that cannot be read in
+    # remove pdfs that text could not be extracted from
     dir_list = [x for i,x in enumerate(dir_list) if i not in broken_pdf_indexes]
     discovery_text_list = [x for i,x in enumerate(discovery_text_list) if i not in broken_pdf_indexes]
 
@@ -50,9 +47,10 @@ def main():
     # print(discovery_text_list[j])
     # return 0
 
-    # for every document, extract the list of discovery requests
+    # for every document, extract a list of discovery requests
     discovery_requests_list = []
     for i in range(0, len(discovery_text_list)):
+        # this regex matches the requests format
         regex = r'[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])'
         regex_matches = re.findall(regex, discovery_text_list[i])
         # if there are no matches, then use a slightly different regex
@@ -73,7 +71,6 @@ def main():
     # sum_list = []
     # for i in range(0, len(discovery_requests_list)):
     #     sum_list.append(len(discovery_requests_list[i]))
-
     # print('\n\nTotal number of documents parsed in: '+str(len(sum_list)))
     # print('Total number of requests parsed out of the documents: '+str(sum(sum_list)))
     # print('Average number of requests per document: '+str(mean(sum_list)))
@@ -115,20 +112,21 @@ def main():
     #         words.append(r[j])
     #print(words)
 
-    # find the relevance count for each unique word
+    # find the occurance count for each unique word
     # word_counts = dict()
     # for w in words:
     #     word_counts[w] = word_counts.get(w,0) + 1
     #print(word_counts)
 
-    # sort the word counts by count to get the most common words
+    # get the most frequently occuring words
     #word_counts_sorted = sorted(word_counts.items(), key=lambda x: x[1], reverse=True)
 
-    # identify the most common words
+    # manually verify the most frequently occuring words
     # for i in range(0,150):
     #     print(word_counts_sorted[i])
 
-    # write stopwords to a csv
+    # write the most frequently occuring words to a csv
+    # import csv
     # with open('stop_words.csv', 'w') as f:
     #     writer = csv.writer(f, delimiter=',', lineterminator='\n')
     #     for i in range(0,200):
@@ -143,17 +141,28 @@ def main():
 
     # remove stopwords
     requests_clean_no_stop = []
+    # loop through each request
     for i in range(0,len(requests_clean)):
         request_no_stop = requests_clean[i]
+        # loop through each stopword, and remove them from each request
         for j in range(0,len(stop_words)):
             request_no_stop = request_no_stop.replace(stop_words[j], ' ')
         # replace double spaces with a single space
         request_no_stop = ' '.join(request_no_stop.split())
         requests_clean_no_stop.append(request_no_stop)
 
-    for i in range(0,len(requests_clean)):
-        print(requests_clean[i])
-        print(requests_clean_no_stop[i]+'\n\n')
+    # manually verify that the requests have no stopwords
+    # for i in range(0,len(requests_clean)):
+    #     print(requests_clean[i])
+    #     print(requests_clean_no_stop[i]+'\n\n')
+    
+    # method 1
+    # - get unique list of words from each request
+    # - find the most common words across every request
+
+    # method 2
+    # - run similarity algorithm for every request against every other request
+    # - find similar groupings
 
     return 0
 

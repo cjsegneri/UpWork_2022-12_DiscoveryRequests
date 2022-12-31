@@ -1,7 +1,6 @@
 
 import os
 import re
-from statistics import mean
 from PyPDF2 import PdfFileReader
 
 
@@ -30,16 +29,17 @@ def main():
         pdf_path = path + dir_list[i]
         discovery_text = get_pdf_text(pdf_path)
         discovery_text_list.append(discovery_text)
-    
+
     # find the indexes for the pdfs that text could not be extracted from
     broken_pdf_indexes = []
     for i in range(0, len(discovery_text_list)):
         if 'the' not in discovery_text_list[i]:
             broken_pdf_indexes.append(i)
-    
+
     # remove pdfs that text could not be extracted from
     dir_list = [x for i,x in enumerate(dir_list) if i not in broken_pdf_indexes]
-    discovery_text_list = [x for i,x in enumerate(discovery_text_list) if i not in broken_pdf_indexes]
+    discovery_text_list = [x for i,x in enumerate(discovery_text_list)\
+        if i not in broken_pdf_indexes]
 
     # manually verify the text for each document was read in correctly
     # j = 29
@@ -68,6 +68,7 @@ def main():
     # print('Document Name: ' + dir_list[j])
 
     # get summary statistics
+    # from statistics import mean
     # sum_list = []
     # for i in range(0, len(discovery_requests_list)):
     #     sum_list.append(len(discovery_requests_list[i]))
@@ -152,10 +153,10 @@ def main():
         requests_clean_no_stop.append(request_no_stop)
 
     # manually verify that the requests have no stopwords
-    # for i in range(0,len(requests_clean)):
-    #     print(requests_clean[i])
-    #     print(requests_clean_no_stop[i]+'\n\n')
-    
+    for i in range(0,len(requests_clean)):
+        print(requests_clean[i])
+        print(requests_clean_no_stop[i]+'\n\n')
+
     # method 1
     # - get unique list of words from each request
     # - find the most common words across every request

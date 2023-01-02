@@ -41,3 +41,25 @@ Multiple definitions in dictionary at byte 0x80 for key /Subtype
 - think through potential request grouping methods
 - go back through the code and add comments where necessary
 - reorganize code according to pylint
+
+
+1/2/2023
+- do some more research into string matching/grouping methods
+- create pandas dataframe containing relevant information
+- detail grouping algorithm (comment out the process in the script)
+- research different similarity algorithm options (with fuzzywuzzy library)
+	- ratio (exact matching)
+	- token_sort_ratio (matches words irrespective of position)
+	- token_set_ratio (matches words irrespective of position, ignores duplicates)
+- implement first version of grouping/similarity matching algorithm
+- add unique ID to dataframe for documents and requests
+- when grouping requests, include the unqiue RequestID
+
+
+1/3/2023
+- create request grouping dataframe (GroupID, RequestID, Raw, Clean, NoStop)
+- manually verify that the final grouping dataframe makes sense in terms of matching
+- tweak grouping with potential improvements
+	- play with the similarity threshold
+	- custom stopwords accross each document
+	- you can only group requests across different documents

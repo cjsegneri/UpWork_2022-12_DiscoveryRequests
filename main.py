@@ -1,7 +1,11 @@
 
 import os
 import re
+from itertools import combinations
 from PyPDF2 import PdfFileReader
+import pandas as pd
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 
 def get_pdf_text(path):
@@ -28,12 +32,12 @@ def main():
     for i in range(0, len(dir_list)):
         pdf_path = path + dir_list[i]
         discovery_text = get_pdf_text(pdf_path)
-        discovery_text_list.append(discovery_text)
+        discovery_text_list.append([dir_list[i], discovery_text])
 
     # find the indexes for the pdfs that text could not be extracted from
     broken_pdf_indexes = []
     for i in range(0, len(discovery_text_list)):
-        if 'the' not in discovery_text_list[i]:
+        if 'the' not in discovery_text_list[i][1]:
             broken_pdf_indexes.append(i)
 
     # remove pdfs that text could not be extracted from
@@ -52,13 +56,13 @@ def main():
     for i in range(0, len(discovery_text_list)):
         # this regex matches the requests format
         regex = r'[0-9][0-9]?\.[ \t]{1,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])'
-        regex_matches = re.findall(regex, discovery_text_list[i])
+        regex_matches = re.findall(regex, discovery_text_list[i][1])
         # if there are no matches, then use a slightly different regex
         # that accounts for no space between the number and the request
         if len(regex_matches) == 0:
             regex = r'[0-9][0-9]?\.[ \t]{0,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])'
-            regex_matches = re.findall(regex, discovery_text_list[i])
-        discovery_requests_list.append(regex_matches)
+            regex_matches = re.findall(regex, discovery_text_list[i][1])
+        discovery_requests_list.append([discovery_text_list[i][0], regex_matches])
 
     # manually verify the requests list for each document
     # j = 52
@@ -81,16 +85,16 @@ def main():
     # merge requests into a single list
     requests = []
     for i in range(0,len(discovery_requests_list)):
-        for j in range(0,len(discovery_requests_list[i])):
-            requests.append(discovery_requests_list[i][j])
+        for j in range(0,len(discovery_requests_list[i][1])):
+            requests.append([discovery_requests_list[i][0], discovery_requests_list[i][1][j]])
 
     # temporarily filter for the first 20 requests
-    requests = requests[:20]
+    #requests = requests[:20]
 
     # clean the requests text
     requests_clean = []
     for i in range(0,len(requests)):
-        r = requests[i]
+        r = requests[i][1]
         # lowercase all characters
         r = r.lower()
         # remove whitespace at the beginning and end of each request
@@ -102,7 +106,7 @@ def main():
         # remove all punctuation
         r = re.sub(r'[!\"#\＄%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~]', '', r)
         # append the clean request
-        requests_clean.append(r)
+        requests_clean.append([requests[i][0], r])
     #print(requests_clean)
 
     # create a list of every word in the requests
@@ -144,26 +148,72 @@ def main():
     requests_clean_no_stop = []
     # loop through each request
     for i in range(0,len(requests_clean)):
-        request_no_stop = requests_clean[i]
+        request_no_stop = requests_clean[i][1]
         # loop through each stopword, and remove them from each request
         for j in range(0,len(stop_words)):
             request_no_stop = request_no_stop.replace(stop_words[j], ' ')
         # replace double spaces with a single space
         request_no_stop = ' '.join(request_no_stop.split())
-        requests_clean_no_stop.append(request_no_stop)
+        requests_clean_no_stop.append([requests_clean[i][0], request_no_stop])
 
     # manually verify that the requests have no stopwords
-    for i in range(0,len(requests_clean)):
-        print(requests_clean[i])
-        print(requests_clean_no_stop[i]+'\n\n')
+    # for i in range(0,len(requests_clean)):
+    #     print(requests_clean[i])
+    #     print(requests_clean_no_stop[i]+'\n\n')
+    
+    # create pandas dataframe with relevant request information
+    requests_final = []
+    for i in range(0,len(requests)):
+        requests_final.append([
+            i+1,
+            requests[i][0],
+            requests[i][1],
+            requests_clean[i][1],
+            requests_clean_no_stop[i][1]
+        ])
+    df_requests = pd.DataFrame(requests_final, columns=[
+        'RequestID',
+        'DocumentName',
+        'RequestRaw',
+        'RequestClean',
+        'RequestCleanNoStop'
+    ])
+    df_requests['DocumentID'] = df_requests['DocumentName'].map(hash)
+    print(df_requests)
+    return 0
 
-    # method 1
-    # - get unique list of words from each request
-    # - find the most common words across every request
+    # specify the similarity threshold that counts as "grouped"
+    threshold = 90
+    # specify the minimum group size
+    min_group_size = 1
+    # create initial pairing dictionary where every request is paired with itself
+    paired = { c:{c} for c in df_requests['RequestCleanNoStop']}
+    # compare each request with every other request, and pair them together if the
+    # result of the matching algorithm achieves threshold
+    for a,b in combinations(df_requests['RequestCleanNoStop'],2):
+        if fuzz.token_sort_ratio(a,b) < threshold: continue
+        paired[a].add(b)
+        paired[b].add(a)
+    # find the best unique groupings
+    groups = list()
+    ungrouped = set(df_requests['RequestCleanNoStop'])
+    while ungrouped:
+        best_group = {}
+        for request in ungrouped:
+            g = paired[request] & ungrouped
+            for c in g.copy():
+                g &= paired[c]
+            if len(g) > len(best_group):
+                best_group = g
+        if len(best_group) < min_group_size : break
+        ungrouped -= best_group
+        groups.append(best_group)
 
-    # method 2
-    # - run similarity algorithm for every request against every other request
-    # - find similar groupings
+    for i in range(0,len(groups[:3])):
+        print('GROUP - '+str(i)+'------------------------------')
+        for s in groups[i]:
+            print('[[['+s+']]]')
+        print('\n\n')
 
     return 0
 

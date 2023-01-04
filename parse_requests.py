@@ -1,11 +1,8 @@
 
 import os
 import re
-from itertools import combinations
 from PyPDF2 import PdfFileReader
 import pandas as pd
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
 
 
 def get_pdf_text(path):
@@ -21,7 +18,7 @@ def get_pdf_text(path):
     # join all the pdf pages into a single string
     return ' '.join(pdf_list)
 
-def main():
+def parse_requests():
     # loop through given directory and collect all the file names
     path = 'DiscoveryDocuments/'
     dir_list = os.listdir(path)
@@ -160,7 +157,7 @@ def main():
     # for i in range(0,len(requests_clean)):
     #     print(requests_clean[i])
     #     print(requests_clean_no_stop[i]+'\n\n')
-    
+
     # create pandas dataframe with relevant request information
     requests_final = []
     for i in range(0,len(requests)):
@@ -180,79 +177,23 @@ def main():
     ])
     df_requests['DocumentID'] = df_requests['DocumentName'].map(hash)
     # print(df_requests)
-    # return 0
 
-    # specify the similarity threshold that counts as "grouped"
-    threshold = 90
-    # specify the minimum group size
-    min_group_size = 1
-    # create initial pairing dictionary where every request is paired with itself
-    #paired = { c:{c} for c in df_requests['RequestCleanNoStop']}
-    paired = {}
-    list_of_tuples = []
-    for i in df_requests.index:
-        list_of_tuples.append((df_requests['RequestID'][i], df_requests['RequestCleanNoStop'][i]))
-        paired[df_requests['RequestCleanNoStop'][i]] = ({(df_requests['RequestID'][i],
-            df_requests['RequestCleanNoStop'][i])})
-    # print(paired)
-    # return 0
-    # compare each request with every other request, and pair them together if the
-    # result of the matching algorithm achieves threshold
-    #for a,b in combinations(df_requests['RequestCleanNoStop'],2):
-    for a,b in combinations(list_of_tuples, 2):
-        if fuzz.token_sort_ratio(a[1],b[1]) >= threshold:
-            paired[a[1]].add(b)
-            paired[b[1]].add(a)
-    # find the best unique groupings
-    groups = list()
-    #ungrouped = set(df_requests['RequestCleanNoStop'])
-    ungrouped = set(list_of_tuples)
-    while ungrouped:
-        best_group = {}
-        for request in ungrouped:
-            g = paired[request[1]] & ungrouped
-            for c in g.copy():
-                g &= paired[c[1]]
-            if len(g) > len(best_group):
-                best_group = g
-        if len(best_group) < min_group_size : break
-        ungrouped -= best_group
-        groups.append(best_group)
+    # rearrange columns
+    df_requests = df_requests[[
+        'DocumentID',
+        'DocumentName',
+        'RequestID',
+        'RequestRaw',
+        'RequestClean',
+        'RequestCleanNoStop']]
 
-    # print('Number of groups: '+str(len(groups)))
-    # for i in range(0,len(groups[:3])):
-    #     print('GROUP - '+str(i)+'------------------------------')
-    #     for s in groups[i]:
-    #         print('[[['+str(s)+']]]')
-    #     print('\n\n')
+    # write results to csv
+    df_requests.to_csv('requests.csv', index=False)
 
-    # convert the list of sets of tuples into a list of lists
-    groups_list = []
-    for i in range(0,len(groups)):
-        for r in groups[i]:
-            groups_list.append([i+1, r[0]])
-        break
-    #print(groups_list)
+    return 0
 
-    # convert the list of lists into a dataframe
-    df_groups = pd.DataFrame(groups_list, columns = ['GroupID', 'RequestID'])
-    #print(df_groups)
-
-    # join the groups data back to the orginal request df
-    df_requests_with_groups = pd.merge(df_requests, df_groups,
-        on = 'RequestID')[[
-            'DocumentID',
-            'DocumentName',
-            'GroupID',
-            'RequestID',
-            'RequestRaw',
-            'RequestClean',
-            'RequestCleanNoStop']]
-    #print(df_requests_with_groups.info())
-    #print(df_requests_with_groups)
-    
-    # save results to csv file
-    df_requests_with_groups.to_csv('requests_with_groups.csv', index=False)
+def main():
+    parse_requests()
 
     return 0
 

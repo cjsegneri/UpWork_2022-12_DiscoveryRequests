@@ -41,14 +41,13 @@ def parse_requests():
         pdf_path = path + dir_list_pdf[i]
         discovery_text = get_pdf_text(pdf_path)
         discovery_text_list.append([dir_list_pdf[i], discovery_text])
-    
+
     # get the raw text for all the discover document word files
     dir_list_doc = [f for f in dir_list if '.doc' in f]
     for i in range(0, len(dir_list_doc)):
         doc_path = path + dir_list_doc[i]
         discovery_test = get_doc_text(doc_path)
         discovery_text_list.append([dir_list_doc[i], discovery_test])
-    #print(discovery_text_list[-3:])
 
     # find the indexes for the pdfs that text could not be extracted from
     broken_pdf_indexes = []
@@ -59,7 +58,7 @@ def parse_requests():
     # remove pdfs that text could not be extracted from
     discovery_text_list = [x for i,x in enumerate(discovery_text_list)\
         if i not in broken_pdf_indexes]
-    print(discovery_text_list[-3])
+    #print(discovery_text_list[-3])
 
     # manually verify the text for each document was read in correctly
     # j = 29
@@ -76,28 +75,31 @@ def parse_requests():
         # if there are no matches, then use a slightly different regex
         # that accounts for no space between the number and the request
         if len(regex_matches) == 0:
-            regex = r'[0-9][0-9]?\.[ \t]{0,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])'
+            regex = r'[0-9][0-9]?(?:\.|\:)[ \t]{0,}(?:.|\n)*?\.(?=[ ]{2,}|\t|\n| \t| \n| [0-9])'
             regex_matches = re.findall(regex, discovery_text_list[i][1])
+            # remove unecessary matches for the docx files
+            if 'doc' in discovery_text_list[i][0]:
+                regex_matches = [r for r in regex_matches if 'REQUEST FOR ADMISSION NO' not in r]
         discovery_requests_list.append([discovery_text_list[i][0], regex_matches])
 
     # manually verify the requests list for each document
-    j = 53
-    print(discovery_requests_list[j])
+    # j = 55
+    # #print(discovery_requests_list[j])
     # for i in range(0, len(discovery_requests_list[j][1])):
     #     print('[[[' + discovery_requests_list[j][1][i] + ']]]\n--------------------\n')
     # print('Document Name: ' + discovery_requests_list[j][0])
-    return 0
 
     # get summary statistics
     # from statistics import mean
     # sum_list = []
     # for i in range(0, len(discovery_requests_list)):
-    #     sum_list.append(len(discovery_requests_list[i]))
+    #     sum_list.append(len(discovery_requests_list[i][1]))
     # print('\n\nTotal number of documents parsed in: '+str(len(sum_list)))
     # print('Total number of requests parsed out of the documents: '+str(sum(sum_list)))
     # print('Average number of requests per document: '+str(mean(sum_list)))
     # print('\nList containing the total number of requests per document:')
     # print(sum_list)
+    # return 0
 
     # merge requests into a single list
     requests = []
@@ -119,7 +121,7 @@ def parse_requests():
         # replace all whitespace (spaces, tabs, newlines) with a single space
         r = ' '.join(r.split())
         # remove request number at the beginning of the string
-        r = re.sub(r'^[0-9][0-9]?\.[ ]?', '', r)
+        r = re.sub(r'^[0-9][0-9]?(?:\.|\:)[ ]?', '', r)
         # remove all punctuation
         r = re.sub(r'[!\"#\＄%&\'\(\)\*\+,-\./:;<=>\?@\[\\\]\^_`{\|}~]', '', r)
         # append the clean request

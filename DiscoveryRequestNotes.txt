@@ -59,10 +59,14 @@ Multiple definitions in dictionary at byte 0x80 for key /Subtype
 1/3/2023
 - create request grouping dataframe (GroupID, RequestID, Raw, Clean, NoStop)
 - reorganize script into multiple files
-	- parse_requests.py
+	- parse_requests.pys
 	- group_requests.py
 - add logic for parsing in 3 additional word documents
-- manually verify that the final grouping dataframe makes sense in terms of matching
+
+
+1/4/2023
+- fix request parsing regex to account for docx files
+- manually verify the top 15 groupings
 - tweak grouping with potential improvements
 	- play with the similarity threshold
 	- custom stopwords accross each document

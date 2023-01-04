@@ -1,6 +1,7 @@
 
 import os
 import re
+import docx
 from PyPDF2 import PdfFileReader
 import pandas as pd
 
@@ -18,18 +19,36 @@ def get_pdf_text(path):
     # join all the pdf pages into a single string
     return ' '.join(pdf_list)
 
+def get_doc_text(path):
+    doc_reader = docx.Document(path)
+    # read in the doc paragraph by paragraph
+    doc_list = []
+    for p in doc_reader.paragraphs:
+        doc_list.append(p.text)
+    # join all the doc paragraphs into a single string
+    return '\n'.join(doc_list)
+
 def parse_requests():
     # loop through given directory and collect all the file names
     path = 'DiscoveryDocuments/'
     dir_list = os.listdir(path)
     #print(len(dir_list)) # 57 documents in total
 
-    # get the raw text for all the discovery documents
+    # get the raw text for all the discovery document pdfs
+    dir_list_pdf = [f for f in dir_list if '.pdf' in f]
     discovery_text_list = []
-    for i in range(0, len(dir_list)):
-        pdf_path = path + dir_list[i]
+    for i in range(0, len(dir_list_pdf)):
+        pdf_path = path + dir_list_pdf[i]
         discovery_text = get_pdf_text(pdf_path)
-        discovery_text_list.append([dir_list[i], discovery_text])
+        discovery_text_list.append([dir_list_pdf[i], discovery_text])
+    
+    # get the raw text for all the discover document word files
+    dir_list_doc = [f for f in dir_list if '.doc' in f]
+    for i in range(0, len(dir_list_doc)):
+        doc_path = path + dir_list_doc[i]
+        discovery_test = get_doc_text(doc_path)
+        discovery_text_list.append([dir_list_doc[i], discovery_test])
+    #print(discovery_text_list[-3:])
 
     # find the indexes for the pdfs that text could not be extracted from
     broken_pdf_indexes = []
@@ -38,9 +57,9 @@ def parse_requests():
             broken_pdf_indexes.append(i)
 
     # remove pdfs that text could not be extracted from
-    dir_list = [x for i,x in enumerate(dir_list) if i not in broken_pdf_indexes]
     discovery_text_list = [x for i,x in enumerate(discovery_text_list)\
         if i not in broken_pdf_indexes]
+    print(discovery_text_list[-3])
 
     # manually verify the text for each document was read in correctly
     # j = 29
@@ -62,11 +81,12 @@ def parse_requests():
         discovery_requests_list.append([discovery_text_list[i][0], regex_matches])
 
     # manually verify the requests list for each document
-    # j = 52
-    # #print(discovery_requests_list[j])
-    # for i in range(0, len(discovery_requests_list[j])):
-    #     print('[[[' + discovery_requests_list[j][i] + ']]]\n--------------------\n')
-    # print('Document Name: ' + dir_list[j])
+    j = 53
+    print(discovery_requests_list[j])
+    # for i in range(0, len(discovery_requests_list[j][1])):
+    #     print('[[[' + discovery_requests_list[j][1][i] + ']]]\n--------------------\n')
+    # print('Document Name: ' + discovery_requests_list[j][0])
+    return 0
 
     # get summary statistics
     # from statistics import mean

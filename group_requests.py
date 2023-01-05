@@ -8,6 +8,7 @@ def group_requests():
     # read in the parsed request data
     df_requests = pd.read_csv('requests.csv')
 
+    ### PRIMARY GROUPING ###
     # specify the similarity threshold that counts as "grouped"
     threshold = 90
     # specify the minimum group size

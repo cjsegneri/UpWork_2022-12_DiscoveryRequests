@@ -74,7 +74,12 @@ Potential Secondary Groups:
 
 
 1/5/2023
-- think through how to calculate secondary groups
-	- GroupID 1 - received/entitled
-	- GroupID 5 - had/was not using
-	- GroupID 10 - prior/after
+- implement the secondary grouping algorithm
+	- think through how to calculate secondary groups
+	- comment out the secondary grouping algorithm process
+	- create new file for secondary grouping script
+	- abstract the functionality of group_requests.py
+	- read in requests_with_groups.csv and filter out unecessary groups
+	- for each group, run the requests through a stricter similarity algorithm
+	- write results to requests_with_secondary_groups.csv
+- aggregate primary/secondary groups into an easily readable summary

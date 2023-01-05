@@ -4,24 +4,14 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 
 
-def group_requests():
-    # read in the parsed request data
-    df_requests = pd.read_csv('requests.csv')
-
-    ### PRIMARY GROUPING ###
-    # specify the similarity threshold that counts as "grouped"
-    threshold = 90
-    # specify the minimum group size
-    min_group_size = 1
-
+def group_similar_strings(threshold, min_group_size, df, id_column_name, str_column_name):
     # create initial pairing dictionary where every request is paired with itself
-    #paired = { c:{c} for c in df_requests['RequestCleanNoStop']}
     paired = {}
     list_of_tuples = []
-    for i in df_requests.index:
-        list_of_tuples.append((df_requests['RequestID'][i], df_requests['RequestCleanNoStop'][i]))
-        paired[df_requests['RequestCleanNoStop'][i]] = ({(df_requests['RequestID'][i],
-            df_requests['RequestCleanNoStop'][i])})
+    for i in df.index:
+        list_of_tuples.append((df[id_column_name][i], df[str_column_name][i]))
+        paired[df[str_column_name][i]] = ({(df[id_column_name][i],
+            df[str_column_name][i])})
 
     # group requests together if the fuzzy matching algorithm meets threshold
     for a,b in combinations(list_of_tuples, 2):
@@ -53,8 +43,20 @@ def group_requests():
     #print(groups_list)
 
     # convert the list of lists into a dataframe
-    df_groups = pd.DataFrame(groups_list, columns = ['GroupID', 'RequestID'])
-    #print(df_groups)
+    return pd.DataFrame(groups_list, columns = ['GroupID', id_column_name])
+
+def group_requests():
+    # read in the parsed request data
+    df_requests = pd.read_csv('requests.csv')
+
+    df_groups = group_similar_strings(
+        threshold = 90,
+        min_group_size = 1,
+        df = df_requests,
+        id_column_name = 'RequestID',
+        str_column_name = 'RequestCleanNoStop')
+    # print(df_groups.info())
+    # print(df_groups)
 
     # join the groups data back to the orginal request df
     df_requests_with_groups = pd.merge(df_requests, df_groups,

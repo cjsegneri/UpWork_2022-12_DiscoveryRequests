@@ -13,12 +13,11 @@ Issues to Troubleshoot:
 - Reynolds Parrino Shadwick P.A..pdf
 - Rigdon Alexander & Ridon LLP.pdf
 
-Look into these warnings:
-Multiple definitions in dictionary at byte 0x80 for key /Subtype
-Multiple definitions in dictionary at byte 0x7d for key /Subtype
-Multiple definitions in dictionary at byte 0x7d for key /Subtype
-Multiple definitions in dictionary at byte 0x80 for key /Subtype
-Multiple definitions in dictionary at byte 0x80 for key /Subtype
+Potential Secondary Groups:
+- GroupID 1 - received/entitled
+- GroupID 5 - had/was not using
+- GroupID 10 - prior/after
+
 
 
 12/29/2022
@@ -72,3 +71,10 @@ Multiple definitions in dictionary at byte 0x80 for key /Subtype
 	- play with the similarity threshold
 	- custom stopwords accross each document
 	- you can only group requests across different documents
+
+
+1/5/2023
+- think through how to calculate secondary groups
+	- GroupID 1 - received/entitled
+	- GroupID 5 - had/was not using
+	- GroupID 10 - prior/after

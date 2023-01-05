@@ -58,15 +58,19 @@ def group_requests():
     # join the groups data back to the orginal request df
     df_requests_with_groups = pd.merge(df_requests, df_groups,
         on = 'RequestID')[[
-            'DocumentID',
-            'DocumentName',
             'GroupID',
+            'DocumentName',
             'RequestID',
-            'RequestRaw',
             'RequestClean',
-            'RequestCleanNoStop']]
+            'RequestCleanNoStop',
+            'RequestRaw']]
     #print(df_requests_with_groups.info())
     #print(df_requests_with_groups)
+
+    # order the dataframe
+    df_requests_with_groups = df_requests_with_groups.sort_values(
+        ['GroupID', 'DocumentName', 'RequestID'],
+        ascending = [True, True, True])
 
     # save results to csv file
     df_requests_with_groups.to_csv('requests_with_groups.csv', index=False)

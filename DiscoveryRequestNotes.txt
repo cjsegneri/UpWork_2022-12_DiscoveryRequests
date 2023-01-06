@@ -80,8 +80,13 @@ Potential Secondary Groups:
 	- create new file for secondary grouping script
 	- abstract the functionality of group_requests.py
 	- read in requests_with_groups.csv and filter out unecessary groups
-	
 	- for each group, run the requests through a stricter similarity algorithm
 	- write results to requests_with_secondary_groups.csv
 	- add group_secondary_requests to main.py
+
+
+- implement the secondary grouping algorithm (pt 2)
+	- before similarity algorithm, try additional stopword pruning
+		- get a unique list of words across each request
+		- remove these words from every request
 - aggregate primary/secondary groups into an easily readable summary

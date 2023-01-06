@@ -4,7 +4,8 @@ import pandas as pd
 from fuzzywuzzy import fuzz
 
 
-def group_similar_strings(threshold, min_group_size, df, id_column_name, str_column_name):
+def group_similar_strings(threshold, min_group_size, df,
+    id_column_name, str_column_name, new_column_name):
     # create initial pairing dictionary where every request is paired with itself
     paired = {}
     list_of_tuples = []
@@ -43,7 +44,7 @@ def group_similar_strings(threshold, min_group_size, df, id_column_name, str_col
     #print(groups_list)
 
     # convert the list of lists into a dataframe
-    return pd.DataFrame(groups_list, columns = ['GroupID', id_column_name])
+    return pd.DataFrame(groups_list, columns = [new_column_name, id_column_name])
 
 def group_requests():
     # read in the parsed request data
@@ -54,7 +55,8 @@ def group_requests():
         min_group_size = 1,
         df = df_requests,
         id_column_name = 'RequestID',
-        str_column_name = 'RequestCleanNoStop')
+        str_column_name = 'RequestCleanNoStop',
+        new_column_name = 'GroupID')
     # print(df_groups.info())
     # print(df_groups)
 

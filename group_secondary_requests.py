@@ -5,7 +5,13 @@ import pandas as pd
 def group_secondary_requests():
     # read in the request data with primary groups
     df_requests_with_groups = pd.read_csv('requests_with_groups.csv')
-    print(df_requests_with_groups.info())
+    #print(df_requests_with_groups)
+
+    # filter out any meaningless groups which have 10% or less requests than the largest group
+    invalid_group_threshold = df_requests_with_groups.query('GroupID == 1')['GroupID'].count() *.2
+    valid_groups_max_id = df_requests_with_groups.groupby(['GroupID']).count().query(
+        'RequestID >= '+str(invalid_group_threshold))['RequestID'].count()
+    df_requests_with_groups = df_requests_with_groups.query('GroupID <= '+str(valid_groups_max_id))
     print(df_requests_with_groups)
 
     # run the secondary similarity algorithm for each group

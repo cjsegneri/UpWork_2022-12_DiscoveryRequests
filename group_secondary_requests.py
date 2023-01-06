@@ -20,6 +20,8 @@ def group_secondary_requests():
         # filter for the current group
         df_current_group = df_requests_with_groups.query('GroupID == '+str(i))
 
+        # NEW STOPWORD FILTER #
+
         # run the similarity algorithm
         df_secondary_groups = group_similar_strings(
             threshold = 95,

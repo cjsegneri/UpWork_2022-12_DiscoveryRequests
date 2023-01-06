@@ -18,7 +18,7 @@ def group_secondary_requests():
     max_group_id = df_requests_with_groups['GroupID'].max()
     for i in range(1, max_group_id+1):
         # filter for the current group
-        df_current_group = df_requests_with_groups.query('GroupID == '+str(i))
+        df_current_group = df_requests_with_groups.query('GroupID == '+str(i)).copy(deep=True)
 
         # get each request for the current group
         current_requests = df_current_group['RequestCleanNoStop'].tolist()

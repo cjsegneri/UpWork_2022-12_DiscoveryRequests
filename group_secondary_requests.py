@@ -50,7 +50,7 @@ def group_secondary_requests():
 
         # run the similarity algorithm
         df_secondary_groups = group_similar_strings(
-            threshold = 90,
+            threshold = 80,
             min_group_size = 1,
             df = df_current_group,
             id_column_name = 'RequestID',

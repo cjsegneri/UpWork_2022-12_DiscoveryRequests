@@ -85,10 +85,14 @@ Potential Secondary Groups:
 	- add group_secondary_requests to main.py
 
 
+1/6/2023
 - implement the secondary grouping algorithm (pt 2)
 	- before similarity algorithm, try additional stopword pruning
 		- get a unique list of words across each request
 		- remove these words from every request
 	- manually verify all subgroups for each group in requests_with_secondary_groups.csv
+
+
+
 - aggregate primary/secondary groups into an easily readable summary
 	- read in requests_with_secondary_groups.csv and filter out small secondary groups

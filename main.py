@@ -9,7 +9,7 @@ def main():
 
     group_requests()
 
-    group_secondary_requests
+    group_secondary_requests()
 
     return 0
 

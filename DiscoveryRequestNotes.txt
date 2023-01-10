@@ -97,7 +97,9 @@ Potential Secondary Groups:
 - aggregate primary/secondary groups into an easily readable summary
 	- change filenames to include phase1, phase2...
 	- test running entire workflow before implementing the final phase to aggregate results
+	- create new file "aggregate_groups.py" and add to main.py
 	- read in requests_with_secondary_groups.csv and filter out small secondary groups
+	- send all csv files and github repo link
 
 
 Final Meeting

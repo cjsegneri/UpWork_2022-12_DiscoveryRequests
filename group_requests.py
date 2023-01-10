@@ -48,7 +48,7 @@ def group_similar_strings(threshold, min_group_size, df,
 
 def group_requests():
     # read in the parsed request data
-    df_requests = pd.read_csv('requests.csv')
+    df_requests = pd.read_csv('PHASE1_requests.csv')
 
     df_groups = group_similar_strings(
         threshold = 90,
@@ -78,7 +78,7 @@ def group_requests():
         ascending = [True, True, True])
 
     # save results to csv file
-    df_requests_with_groups.to_csv('requests_with_groups.csv', index=False)
+    df_requests_with_groups.to_csv('PHASE2_requests_with_groups.csv', index=False)
 
     return 0
 

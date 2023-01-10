@@ -210,7 +210,7 @@ def parse_requests():
         'RequestCleanNoStop']]
 
     # write results to csv
-    df_requests.to_csv('requests.csv', index=False)
+    df_requests.to_csv('PHASE1_requests.csv', index=False)
 
     return 0
 

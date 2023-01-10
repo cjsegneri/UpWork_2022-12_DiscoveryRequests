@@ -93,6 +93,15 @@ Potential Secondary Groups:
 	- manually verify all subgroups for each group in requests_with_secondary_groups.csv
 
 
-
+1/10/2023
 - aggregate primary/secondary groups into an easily readable summary
+	- change filenames to include phase1, phase2...
+	- test running entire workflow before implementing the final phase to aggregate results
 	- read in requests_with_secondary_groups.csv and filter out small secondary groups
+
+
+Final Meeting
+- briefly walk through each phase
+- discuss thresholds
+	- grouping / secondary grouping similarity thresholds
+	- grouping / secondary grouping relevance thresholds

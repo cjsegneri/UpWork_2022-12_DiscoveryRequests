@@ -5,7 +5,7 @@ from group_requests import group_similar_strings
 
 def group_secondary_requests():
     # read in the request data with primary groups
-    df_requests_with_groups = pd.read_csv('requests_with_groups.csv')
+    df_requests_with_groups = pd.read_csv('PHASE2_requests_with_groups.csv')
 
     # filter out any meaningless groups which have 10% or less requests than the largest group
     invalid_group_threshold = df_requests_with_groups.query('GroupID == 1')['GroupID'].count() *.2
@@ -84,7 +84,8 @@ def group_secondary_requests():
         ascending = [True, True, True, True])
 
     # save results to csv file
-    df_requests_with_secondary_groups.to_csv('requests_with_secondary_groups.csv', index=False)
+    df_requests_with_secondary_groups.to_csv('PHASE3_requests_with_secondary_groups.csv',
+        index=False)
 
     return 0
 

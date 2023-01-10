@@ -94,15 +94,22 @@ Potential Secondary Groups:
 
 
 1/10/2023
-- aggregate primary/secondary groups into an easily readable summary
-	- change filenames to include phase1, phase2...
-	- test running entire workflow before implementing the final phase to aggregate results
-	- create new file "aggregate_groups.py" and add to main.py
-	- read in requests_with_secondary_groups.csv and filter out small secondary groups
-	- send all csv files and github repo link
+- change filenames to include phase1, phase2...
+- test running entire workflow before implementing the final phase to aggregate results
+- create new file "aggregate_groups.py" and add to main.py
+- read in requests_with_secondary_groups.csv and filter out small secondary groups
+- change secondary grouping filtering to find the invalid_group_threshold FOR EACH primary group
+- send phase 3 file with progress update
+
+
+- save secondary filtered groups to csv and compare with requests_with_secondary_groups.csv manually to find a threshold that accurately filters redundant secondary groups
+- finish aggregation of results
+- add aggregate_groups.py to main.py
+- pylint on aggregate_groups.py
 
 
 Final Meeting
+- send all csv files and github repo link
 - briefly walk through each phase
 - discuss thresholds
 	- grouping / secondary grouping similarity thresholds

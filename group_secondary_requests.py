@@ -7,7 +7,7 @@ def group_secondary_requests():
     # read in the request data with primary groups
     df_requests_with_groups = pd.read_csv('PHASE2_requests_with_groups.csv')
 
-    # filter out any meaningless groups which have 10% or less requests than the largest group
+    # filter out any meaningless groups which have 20% or less requests than the largest group
     invalid_group_threshold = df_requests_with_groups.query('GroupID == 1')['GroupID'].count() *.2
     valid_groups_max_id = df_requests_with_groups.groupby(['GroupID']).count().query(
         'RequestID >= '+str(invalid_group_threshold))['RequestID'].count()

@@ -102,13 +102,18 @@ Potential Secondary Groups:
 - send phase 3 file with progress update
 
 
+1/11/2023
 - save secondary filtered groups to csv and compare with requests_with_secondary_groups.csv manually to find a threshold that accurately filters redundant secondary groups
-- finish aggregation of results
+
+
+1/12/2023
+- troubleshoot primary_group_name issue
+- finish aggregating the rest of the final columns
 - add aggregate_groups.py to main.py
 - pylint on aggregate_groups.py
 
 
-Final Meeting
+Next Meeting
 - send all csv files and github repo link
 - briefly walk through each phase
 - discuss thresholds

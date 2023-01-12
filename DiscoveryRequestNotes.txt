@@ -109,8 +109,10 @@ Potential Secondary Groups:
 1/12/2023
 - troubleshoot primary_group_name issue
 - finish aggregating the rest of the final columns
+- manually verify all of the aggregated groups
 - add aggregate_groups.py to main.py
-- pylint on aggregate_groups.py
+- pylint on all 4 .py files
+- test the entire process (python main.py)
 
 
 Next Meeting

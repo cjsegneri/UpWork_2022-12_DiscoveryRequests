@@ -2,6 +2,7 @@
 from parse_requests import parse_requests
 from group_requests import group_requests
 from group_secondary_requests import group_secondary_requests
+from aggregate_groups import aggregate_groups
 
 
 def main():
@@ -10,6 +11,8 @@ def main():
     group_requests()
 
     group_secondary_requests()
+
+    aggregate_groups()
 
     return 0
 

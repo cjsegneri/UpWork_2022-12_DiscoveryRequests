@@ -8,6 +8,12 @@ def aggregate_groups():
     # print(df_req_with_sec_groups.info())
     # print(df_req_with_sec_groups)
 
+    # filter out any meaningless groups which have 20% or less requests than the largest group
+    invalid_group_threshold = df_req_with_sec_groups.query('GroupID == 1')['GroupID'].count() *.2
+    valid_groups_max_id = df_req_with_sec_groups.groupby(['GroupID']).count().query(
+        'RequestID >= '+str(invalid_group_threshold))['RequestID'].count()
+    df_req_with_sec_groups = df_req_with_sec_groups.query('GroupID <= '+str(valid_groups_max_id))
+
     # for each primary group, find the valid threshold for the secondary grouping
     df_valid_groups = pd.DataFrame()
     max_group_id = df_req_with_sec_groups['GroupID'].max()

@@ -8,10 +8,10 @@ def group_secondary_requests():
     df_requests_with_groups = pd.read_csv('PHASE2_requests_with_groups.csv')
 
     # filter out any meaningless groups which have 20% or less requests than the largest group
-    invalid_group_threshold = df_requests_with_groups.query('GroupID == 1')['GroupID'].count() *.2
-    valid_groups_max_id = df_requests_with_groups.groupby(['GroupID']).count().query(
-        'RequestID >= '+str(invalid_group_threshold))['RequestID'].count()
-    df_requests_with_groups = df_requests_with_groups.query('GroupID <= '+str(valid_groups_max_id))
+    # invalid_group_threshold = df_requests_with_groups.query('GroupID == 1')['GroupID'].count() *.2
+    # valid_groups_max_id = df_requests_with_groups.groupby(['GroupID']).count().query(
+    #     'RequestID >= '+str(invalid_group_threshold))['RequestID'].count()
+    # df_requests_with_groups = df_requests_with_groups.query('GroupID <= '+str(valid_groups_max_id))
 
     # run the secondary similarity algorithm for each group
     df_requests_with_secondary_groups = pd.DataFrame()

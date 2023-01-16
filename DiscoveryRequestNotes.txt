@@ -129,5 +129,6 @@ Meeting 1/16/2023
 	- get rid of filters for primary and secondary groups (phase3 file 529->1177 rows)
 	- apply the filters only in phase 4 aggregation (phase4 file 23->23 rows)
 - create another program/file for running a new pdf through the existing groups
-	- 
+
+
 - think through next steps for phase 6

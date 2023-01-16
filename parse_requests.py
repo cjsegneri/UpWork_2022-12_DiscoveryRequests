@@ -28,9 +28,9 @@ def get_doc_text(path):
     # join all the doc paragraphs into a single string
     return '\n'.join(doc_list)
 
-def parse_requests():
+def parse_requests(path, csv_name):
     # loop through given directory and collect all the file names
-    path = 'DiscoveryDocuments/'
+    #path = 'DiscoveryDocuments/'
     dir_list = os.listdir(path)
     #print(len(dir_list)) # 57 documents in total
 
@@ -210,12 +210,12 @@ def parse_requests():
         'RequestCleanNoStop']]
 
     # write results to csv
-    df_requests.to_csv('PHASE1_requests.csv', index=False)
+    df_requests.to_csv(csv_name, index=False)
 
     return 0
 
 def main():
-    parse_requests()
+    parse_requests(path='DiscoveryDocuments/', csv_name='PHASE1_requests.csv')
 
     return 0
 

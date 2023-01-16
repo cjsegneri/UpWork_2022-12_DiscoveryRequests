@@ -6,7 +6,7 @@ from aggregate_groups import aggregate_groups
 
 
 def main():
-    parse_requests()
+    parse_requests(path='DiscoveryDocuments/', csv_name='PHASE1_requests.csv')
 
     group_requests()
 
